@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import Home from "../Pages/Home/Home";
+import Owner_Layout from "../Layout/Owner_Dashboard/Owner_Layout";
+import Owner_Dashboard from "../Pages/Owner_Dashboard/Owner_Dashboard";
 
 export const router = new createBrowserRouter([
   {
@@ -14,21 +16,21 @@ export const router = new createBrowserRouter([
     ],
   },
   {
-    path: "/owner dashboard",
-    element: <div>owner</div>,
+    path: "/owner_dashboard",
+    element: <Owner_Layout />,
     children: [
       {
-        path: "/owner dashboard",
-        element: <div></div>,
+        path: "/owner_dashboard",
+        element: <Owner_Dashboard />,
       },
     ],
   },
   {
-    path: "/renter dashboard",
-    element: <div>owner</div>,
+    path: "/renter_dashboard",
+    element: <div>renter</div>,
     children: [
       {
-        path: "/renter dashboard",
+        path: "/renter_dashboard",
         element: <div></div>,
       },
     ],

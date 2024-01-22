@@ -8,7 +8,7 @@ const Navbar = () => {
     <nav className="shadow-black shadow-sm py-5">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-2xl font-medium">Home Hoppers</h1>
-        <ul className="flex gap-3">
+        <ul className="flex">
           {navItem.map((_, i) => (
             <li key={_}>
               <NavLink
@@ -17,8 +17,8 @@ const Navbar = () => {
                   isPending
                     ? "pending"
                     : isActive
-                    ? "px-6 bg-[#0095FF] text-white py-2 rounded-lg duration-300"
-                    : ""
+                    ? "px-6 bg-black text-white py-2 rounded-lg duration-300"
+                    : "px-6 py-2 hover:bg-black/20 rounded-lg"
                 }
               >
                 {_}

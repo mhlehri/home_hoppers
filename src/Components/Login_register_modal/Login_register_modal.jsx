@@ -9,7 +9,7 @@ export const Login_register_modal = ({ text }) => {
     <div>
       <button
         onClick={() => setOpenModal(true)}
-        className="bg-gray-700 text-white p-2 rounded-lg"
+        className="bg-black text-white p-2 rounded-lg"
       >
         {text}
       </button>

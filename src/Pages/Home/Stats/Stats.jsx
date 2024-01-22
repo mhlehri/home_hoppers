@@ -1,7 +1,7 @@
 import CountUp from "react-countup";
 const Stats = () => {
   return (
-    <section className="p-6 my-20 max-w-4xl mx-auto text-center font-mono bg-black rounded-lg text-white font-black">
+    <section className="p-6 my-20 max-w-4xl mx-auto text-center bg-black rounded-lg text-white font-black">
       <div className="container mx-auto grid justify-center text-center grid-cols-3">
         <div className="flex flex-col justify-start m-2 lg:m-6 drop-shadow-2xl">
           <p className="text-4xl font-bold  lg:text-4xl">

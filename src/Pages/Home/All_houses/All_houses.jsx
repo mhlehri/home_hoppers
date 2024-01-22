@@ -7,6 +7,7 @@ import Select from "react-select";
 // import useAllPublishers from "../../hooks/useAllPublishers";
 import { useEffect } from "react";
 import Card from "../../../Components/Card/Card";
+import Search from "../../../Components/Search/Serach";
 
 const options = [
   { value: "", label: "All Tags" },
@@ -77,65 +78,67 @@ const All_houses = () => {
   };
 
   return (
-    <div className="flex justify-between items-start">
-      <div className="my-12 max-w-40 grid grid-cols-1">
-        <div className="grid grid-cols-1 gap-2">
-          <Select
-            value={selectedOption}
-            required
-            placeholder="Filter tags"
-            onChange={setSelectedOption}
-            options={options}
-          />
-          <Select
-            value={selectedOption1}
-            required
-            placeholder="Filter publishers"
-            onChange={setSelectedOption1}
-            options={options1}
-          />
+    <>
+      <Search handleSubmit={handleSubmit} />
+      <div className="flex justify-between items-start">
+        <div className="w-56 grid grid-cols-1">
+          <div className="grid grid-cols-1 gap-2">
+            <Select
+              value={selectedOption}
+              required
+              placeholder="Filter tags"
+              onChange={setSelectedOption}
+              options={options}
+            />
+            <Select
+              value={selectedOption1}
+              required
+              placeholder="Filter publishers"
+              onChange={setSelectedOption1}
+              options={options1}
+            />
+          </div>
+          <br />
         </div>
-        <br />
-        {/* <Search handleSubmit={handleSubmit} />{" "} */}
-      </div>
-      <div className="mx-auto">
-        {isPending ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-20">
-            {/* <Skeleton />
+        <div className="mx-auto">
+          {isPending ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-20">
+              {/* <Skeleton />
           <Skeleton /> */}
-          </div>
-        ) : articles?.length ? (
-          <InfiniteScroll
-            dataLength={articles ? articles.length : 0}
-            next={() => fetchNextPage()}
-            hasMore={hasNextPage}
-            loader={
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-20">
-                {/* <Skeleton />
+            </div>
+          ) : articles?.length ? (
+            <InfiniteScroll
+              dataLength={articles ? articles.length : 0}
+              next={() => fetchNextPage()}
+              hasMore={hasNextPage}
+              loader={
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-20">
+                  {/* <Skeleton />
               <Skeleton /> */}
+                </div>
+              }
+            >
+              <div className="mb-16">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                  {articles?.map((data, inx) => {
+                    return <Card data={data} key={inx}></Card>;
+                  })}
+                </div>
               </div>
-            }
-          >
-            <div className="mb-16">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                {articles?.map((data, inx) => {
-                  return <Card data={data} key={inx}></Card>;
-                })}
+            </InfiniteScroll>
+          ) : (
+            <div className="h-[50vh] w-full flex flex-col justify-center items-center ]">
+              <h1 className="text-9xl font-extrabold text-black tracking-widest">
+                404
+              </h1>
+              <div className="bg-sky-400 text-white px-2 text-sm rounded rotate-12 absolute">
+                Data Not Found
               </div>
             </div>
-          </InfiniteScroll>
-        ) : (
-          <div className="h-[50vh] w-full flex flex-col justify-center items-center ]">
-            <h1 className="text-9xl font-extrabold text-black tracking-widest">
-              404
-            </h1>
-            <div className="bg-gradient-to-tr from-[#58bfff]  to-[#01bea5] text-white px-2 text-sm rounded rotate-12 absolute">
-              Data Not Found
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

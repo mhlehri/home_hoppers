@@ -5,7 +5,7 @@ const navItem = ["Home", "FAQ", "Support"];
 
 const Navbar = () => {
   return (
-    <nav className="shadow-black shadow-sm py-5 font-mono">
+    <nav className="shadow-black shadow-sm py-5">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-2xl font-medium">Home Hoppers</h1>
         <ul className="flex gap-3">

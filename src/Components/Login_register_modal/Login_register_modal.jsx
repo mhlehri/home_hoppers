@@ -1,10 +1,115 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Hello } from "../../Shared/Lottie/Lottie";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export const Login_register_modal = ({ text }) => {
+  const [select_options, setSelect_options] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [register, setRegister] = useState(false);
+  const handleOnChange = (e) => {
+    setSelect_options(e.target.value);
+  };
+  const navigate = useNavigate();
+  const handleSubmitR = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const role = select_options;
+    const email = form.email.value;
+    const number = form.number.value;
+    const password = form.password.value;
+    console.log(name, number, role, email, password);
+    const userInfo = { name, role, number, email, password };
+    if (password.length < 6) {
+      return toast.error("Password should be at least 6 character!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else if (!password.match(/[A-Z]/)) {
+      return toast.error("Password should have at least one UpperCase!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else if (
+      !password.match(/[!@#\$%\^&\*\(\)\-_\+=\{\}\[\]:;'<>,\.\?/\\\|`~"]/)
+    ) {
+      return toast.error("Password should have at least special Character!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else if (!number.startsWith("880")) {
+      return toast.error("Provide a Bangladeshi Number", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else if (!(number.length === 13)) {
+      toast.error("Invalid Number", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else {
+      axios
+        .post("http://localhost:5000/addUser", userInfo)
+        .then(() => {
+          navigate("/owner_dashboard");
+          toast.success("Successfully registered!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        })
+        .catch(() =>
+          toast.error("Email Already exists", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          })
+        );
+    }
+  };
+
   return (
     <div>
       <button
@@ -47,9 +152,10 @@ export const Login_register_modal = ({ text }) => {
               ></path>
             </g>
           </svg>
-          <div className=" bg-white flex items-center relative overflow-hidden shadow-xl">
+          <div className="flex items-center relative overflow-hidden">
             {/* register form  */}
             <form
+              onSubmit={handleSubmitR}
               className={`p-8 w-full ${
                 register
                   ? "lg:translate-x-0"
@@ -65,61 +171,82 @@ export const Login_register_modal = ({ text }) => {
                     Name
                   </label>
                   <input
+                    required
                     id="name"
-                    type="name"
+                    type="text"
                     placeholder="John Doe"
-                    className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
                   />
                 </div>
                 <div>
-                  <label htmlFor="role" className="block">
-                    Role
-                  </label>
-                  <input
+                  <label htmlFor="role">Role</label>
+                  <select
                     id="role"
-                    type="name"
-                    placeholder="Owner or Renter"
-                    className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
-                  />
+                    onChange={handleOnChange}
+                    value={select_options}
+                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                    name="role"
+                    required
+                  >
+                    <option className="py-2 rounded text-gray-400" value="">
+                      Choose a role
+                    </option>
+                    <option
+                      className="py-2 rounded text-gray-400"
+                      value="House Owner"
+                    >
+                      House Owner
+                    </option>
+                    <option
+                      className="py-2 rounded text-gray-400"
+                      value="House Renter"
+                    >
+                      House Renter
+                    </option>
+                  </select>
                 </div>
                 <div>
                   <label htmlFor="number" className="block">
                     Number
                   </label>
                   <input
+                    required
                     id="number"
                     type="number"
+                    defaultValue={880}
                     placeholder="Owner or Renter"
-                    className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
                   />
                 </div>
                 <div>
-                  <label htmlFor="u_email" className="block">
+                  <label htmlFor="email" className="block">
                     Email
                   </label>
                   <input
-                    id="u_email"
-                    type="u_email"
+                    required
+                    id="email"
+                    type="email"
                     placeholder="example@example.com"
-                    className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
                   />
                 </div>
                 <div>
-                  <label htmlFor="u_password" className="block">
+                  <label htmlFor="password" className="block">
                     Password
                   </label>
                   <input
-                    id="u_password"
-                    type="u_password"
+                    required
+                    id="password"
+                    type="password"
                     placeholder=".............."
                     min={5}
-                    className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
                   />
                 </div>
               </div>
               {/* button type will be submit for handling form submission*/}
               <button
-                type="button"
+                type="submit"
                 className="py-2 px-5 mb-4 mx-auto mt-6 shadow-lg border rounded-md border-black block"
               >
                 Submit
@@ -163,7 +290,7 @@ export const Login_register_modal = ({ text }) => {
                   id="_email"
                   type="email"
                   placeholder="example@example.com"
-                  className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
+                  className="p-3 block w-full outline-none border rounded-md valid:border-black"
                 />
                 <label htmlFor="_password" className="block">
                   Password
@@ -173,7 +300,7 @@ export const Login_register_modal = ({ text }) => {
                   type="password"
                   placeholder=".............."
                   min={5}
-                  className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black"
+                  className="p-3 block w-full outline-none border rounded-md valid:border-black"
                 />
               </div>
               {/* button type will be submit for handling form submission*/}

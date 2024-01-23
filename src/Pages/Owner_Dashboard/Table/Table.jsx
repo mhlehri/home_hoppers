@@ -1,3 +1,5 @@
+import { Delete_modal } from "../../../Components/Delete_modal/Delete_modal";
+
 const Table = () => {
   return (
     <div>
@@ -40,9 +42,7 @@ const Table = () => {
                 <button className="font-medium text-blue-600 hover:underline">
                   Edit
                 </button>
-                <button className="font-medium text-blue-600 hover:underline">
-                  Remove
-                </button>
+                <Delete_modal />
               </td>
             </tr>
             <tr className="odd:bg-white even:bg-gray-50 border-b">
@@ -62,9 +62,7 @@ const Table = () => {
                 <button className="font-medium text-blue-600 hover:underline">
                   Edit
                 </button>
-                <button className="font-medium text-blue-600 hover:underline">
-                  Remove
-                </button>
+                <Delete_modal />
               </td>
             </tr>
             <tr className="odd:bg-white even:bg-gray-50 border-b">
@@ -84,9 +82,7 @@ const Table = () => {
                 <button className="font-medium text-blue-600 hover:underline">
                   Edit
                 </button>
-                <button className="font-medium text-blue-600 hover:underline">
-                  Remove
-                </button>
+                <Delete_modal />
               </td>
             </tr>
           </tbody>

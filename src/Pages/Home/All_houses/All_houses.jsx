@@ -48,7 +48,7 @@ const All_houses = () => {
   const [search, setSearch] = useState("");
   const getArticles = async (page) => {
     const res = await fetch(
-      `https://server12-two.vercel.app/articles?limit=10&page=${page}&tags=${selectedOption.value}&publisher=${selectedOption1.value}&search=${search}`
+      `http://localhost:5000/allHouses?limit=10&page=${page}&tags=${selectedOption.value}&publisher=${selectedOption1.value}&search=${search}`
     );
     return res.json();
   };

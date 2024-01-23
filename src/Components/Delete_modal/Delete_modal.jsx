@@ -8,7 +8,7 @@ export const Delete_modal = () => {
         onClick={() => setOpenModal(true)}
         className="bg-[#0095FF] text-white p-2 rounded-lg"
       >
-        Modal
+        Delete
       </button>
       <div
         onClick={() => setOpenModal(false)}

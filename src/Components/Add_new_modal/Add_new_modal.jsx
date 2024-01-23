@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const Add_new_modal = ({ text }) => {
   const [openModal, setOpenModal] = useState(false);
+  const formRef = useRef(null);
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -19,7 +21,7 @@ export const Add_new_modal = ({ text }) => {
     const des = form.des.value;
     const email = "fdfd";
     const owner_name = "lehri";
-    console.log(
+    const houseInfo = {
       name,
       address,
       city,
@@ -32,8 +34,22 @@ export const Add_new_modal = ({ text }) => {
       number,
       des,
       email,
-      owner_name
-    );
+      owner_name,
+    };
+    axios.post("http://localhost:5000/addHouse", houseInfo).then(() => {
+      setOpenModal(false);
+      toast.success("Successfully Inserted!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      formRef.current.reset();
+    });
   };
   return (
     <div>
@@ -51,6 +67,7 @@ export const Add_new_modal = ({ text }) => {
       >
         <form
           onSubmit={handleSubmit}
+          ref={formRef}
           onClick={(e_) => e_.stopPropagation()}
           className={`w-full md:w-96 lg:w-[600px] h-fit px-6 py-2 my-4 bg-white drop-shadow-2xl rounded-lg  ${
             openModal
@@ -215,7 +232,7 @@ export const Add_new_modal = ({ text }) => {
           </div>
           {/* button type will be submit for handling form submission*/}
           <button
-            type="button"
+            type="submit"
             className="py-2 px-5 mb-4 mx-auto mt-6 shadow-lg border rounded-md border-black block"
           >
             Submit

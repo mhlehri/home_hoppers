@@ -1,13 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, json, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { Hello } from "../../Shared/Lottie/Lottie";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
-export const Login_register_modal = ({ text }) => {
+export const Login_register_modal = () => {
   const [select_options, setSelect_options] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [register, setRegister] = useState(false);
+  const { user, setIsChanged } = useContext(AuthContext);
   const handleOnChange = (e) => {
     setSelect_options(e.target.value);
   };
@@ -22,6 +24,7 @@ export const Login_register_modal = ({ text }) => {
     const password = form.password.value;
     console.log(name, number, role, email, password);
     const userInfo = { name, role, number, email, password };
+    const localInfo = { name, role, number, email };
     if (password.length < 6) {
       return toast.error("Password should be at least 6 character!", {
         position: "top-center",
@@ -83,7 +86,7 @@ export const Login_register_modal = ({ text }) => {
       axios
         .post("http://localhost:5000/addUser", userInfo)
         .then(() => {
-          navigate("/owner_dashboard");
+          localStorage.setItem("user", JSON.stringify(localInfo));
           toast.success("Successfully registered!", {
             position: "top-center",
             autoClose: 2000,
@@ -94,6 +97,14 @@ export const Login_register_modal = ({ text }) => {
             progress: undefined,
             theme: "colored",
           });
+          setIsChanged((pre) => !pre);
+          navigate(
+            `${
+              user.role == "House Owner"
+                ? "/owner_dashboard"
+                : "/renter_dashboard"
+            }`
+          );
         })
         .catch(() =>
           toast.error("Email Already exists", {
@@ -109,15 +120,90 @@ export const Login_register_modal = ({ text }) => {
         );
     }
   };
+  const handleSubmitL = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    axios
+      .get(`http://localhost:5000/user?email=${email}&password=${password}`)
+      .then((res) => {
+        if (res.data.email === email) {
+          const { name, email, role, number } = res.data;
+          const localInfo = { name, email, role, number };
+          localStorage.setItem("user", JSON.stringify(localInfo));
+          toast.success("Successfully logged!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          setIsChanged((pre) => !pre);
+          navigate(
+            `${
+              role == "House Owner" ? "/owner_dashboard" : "/renter_dashboard"
+            }`
+          );
+        } else if (res.data.error) {
+          toast.error(res.data.error, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      })
+      .catch((ee) =>
+        toast.error(ee, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        })
+      );
+  };
 
   return (
     <div>
-      <button
-        onClick={() => setOpenModal(true)}
-        className="bg-black text-white p-2 rounded-lg"
-      >
-        {text}
-      </button>
+      {user ? (
+        <button
+          onClick={() => {
+            setIsChanged((er) => !er);
+            toast.success("Successfully logout!", {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            localStorage.removeItem("user");
+          }}
+          className="border border-black hover:bg-black hover:text-white p-2 rounded-lg"
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          onClick={() => setOpenModal(true)}
+          className="border border-black hover:bg-black hover:text-white p-2 rounded-lg"
+        >
+          Login
+        </button>
+      )}
       <div
         onClick={() => setOpenModal(false)}
         className={`fixed flex justify-center items-center z-[100] ${
@@ -175,7 +261,7 @@ export const Login_register_modal = ({ text }) => {
                     id="name"
                     type="text"
                     placeholder="John Doe"
-                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md"
                   />
                 </div>
                 <div>
@@ -184,7 +270,7 @@ export const Login_register_modal = ({ text }) => {
                     id="role"
                     onChange={handleOnChange}
                     value={select_options}
-                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md"
                     name="role"
                     required
                   >
@@ -215,7 +301,7 @@ export const Login_register_modal = ({ text }) => {
                     type="number"
                     defaultValue={880}
                     placeholder="Owner or Renter"
-                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md"
                   />
                 </div>
                 <div>
@@ -227,7 +313,7 @@ export const Login_register_modal = ({ text }) => {
                     id="email"
                     type="email"
                     placeholder="example@example.com"
-                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md"
                   />
                 </div>
                 <div>
@@ -240,7 +326,7 @@ export const Login_register_modal = ({ text }) => {
                     type="password"
                     placeholder=".............."
                     min={5}
-                    className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                    className="p-3 block w-full outline-none border rounded-md"
                   />
                 </div>
               </div>
@@ -275,6 +361,7 @@ export const Login_register_modal = ({ text }) => {
             </div>
             {/* login form */}
             <form
+              onSubmit={handleSubmitL}
               className={`p-8 w-full mr-0 ml-auto duration-500 ${
                 register ? "lg:translate-x-full hidden lg:block" : ""
               }`}
@@ -289,8 +376,9 @@ export const Login_register_modal = ({ text }) => {
                 <input
                   id="_email"
                   type="email"
+                  name="email"
                   placeholder="example@example.com"
-                  className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                  className="p-3 block w-full outline-none border rounded-md"
                 />
                 <label htmlFor="_password" className="block">
                   Password
@@ -298,14 +386,14 @@ export const Login_register_modal = ({ text }) => {
                 <input
                   id="_password"
                   type="password"
+                  name="password"
                   placeholder=".............."
                   min={5}
-                  className="p-3 block w-full outline-none border rounded-md valid:border-black"
+                  className="p-3 block w-full outline-none border rounded-md"
                 />
-              </div>
-              {/* button type will be submit for handling form submission*/}
+              </div>{" "}
               <button
-                type="button"
+                type="submit"
                 className="py-2 px-5 mb-4 mx-auto mt-8 shadow-lg border rounded-md border-black block"
               >
                 Submit

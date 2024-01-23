@@ -27,7 +27,7 @@ const Navbar = () => {
           ))}
         </ul>
         <div>
-          <Login_register_modal text={"Login"}></Login_register_modal>
+          <Login_register_modal></Login_register_modal>
         </div>
       </div>
     </nav>

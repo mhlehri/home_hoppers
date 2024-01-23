@@ -8,41 +8,38 @@ import Select from "react-select";
 import { useEffect } from "react";
 import Card from "../../../Components/Card/Card";
 import Search from "../../../Components/Search/Serach";
+import axios from "axios";
 
 const options = [
-  { value: "", label: "All Tags" },
-  { value: "Politics", label: "Politics" },
-  { value: "Business", label: "Business" },
-  { value: "Technology", label: "Technology" },
-  { value: "Sports", label: "Sports" },
-  { value: "Science", label: "Science" },
-  { value: "Health", label: "Health" },
-  { value: "Entertainment", label: "Entertainment" },
-];
-const options1 = [
-  { value: "", label: "All Tags" },
-  { value: "Politics", label: "Politics" },
-  { value: "Business", label: "Business" },
-  { value: "Technology", label: "Technology" },
-  { value: "Sports", label: "Sports" },
-  { value: "Science", label: "Science" },
-  { value: "Health", label: "Health" },
-  { value: "Entertainment", label: "Entertainment" },
+  { value: "", label: "Bedrooms" },
+  { value: "1", label: "1" },
+  { value: "2", label: "2" },
+  { value: "3", label: "3" },
+  { value: "4", label: "4" },
 ];
 
 const All_houses = () => {
+  const [options1, setOptions1] = useState();
   useEffect(() => {
     window.document.title = "PrimePress | All Articles";
+    axios.get("/city.json").then((res) => {
+      const all = [{ value: "", label: "All City" }];
+      res.data.map((_, i) => {
+        all.push({ value: _.name, label: _.name });
+        setOptions1(all);
+      });
+    });
   }, []);
+  console.log(options1);
   //   const { data: publishers } = useAllPublishers();
 
   const [selectedOption, setSelectedOption] = useState({
     value: "",
-    label: "All Tags",
+    label: "Bedrooms",
   });
   const [selectedOption1, setSelectedOption1] = useState({
     value: "",
-    label: "All Publisher",
+    label: "All City",
   });
 
   const [search, setSearch] = useState("");
@@ -72,7 +69,7 @@ const All_houses = () => {
     });
     setSelectedOption1({
       value: "",
-      label: "All Tags",
+      label: "All City",
     });
     setSearch(e.target.value);
   };
@@ -93,7 +90,7 @@ const All_houses = () => {
             <Select
               value={selectedOption1}
               required
-              placeholder="Filter publishers"
+              placeholder="City"
               onChange={setSelectedOption1}
               options={options1}
             />

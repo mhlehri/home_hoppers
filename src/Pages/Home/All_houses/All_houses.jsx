@@ -20,7 +20,7 @@ const options = [
 const options2 = [
   { value: "", label: "Availability" },
   { value: "available", label: "Available" },
-  { value: "Booked", label: "Booked" },
+  { value: "booked", label: "Booked" },
 ];
 
 const All_houses = () => {
@@ -57,19 +57,20 @@ const All_houses = () => {
     );
     return res.json();
   };
-  const { isPending, data, hasNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: [
-      "infinity",
-      selectedOption,
-      selectedOption1,
-      selectedOption2,
-      search,
-    ],
-    queryFn: ({ pageParam = 1 }) => getArticles(pageParam),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.length == 10 ? pages.length + 1 : undefined;
-    },
-  });
+  const { isPending, data, refetch, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: [
+        "infinity",
+        selectedOption,
+        selectedOption1,
+        selectedOption2,
+        search,
+      ],
+      queryFn: ({ pageParam = 1 }) => getArticles(pageParam),
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.length == 10 ? pages.length + 1 : undefined;
+      },
+    });
 
   const articles = data?.pages.reduce((acc, page) => {
     return [...acc, ...page];
@@ -141,7 +142,9 @@ const All_houses = () => {
               <div className="mb-16">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                   {articles?.map((data, inx) => {
-                    return <Card data={data} key={inx}></Card>;
+                    return (
+                      <Card refetch={refetch} data={data} key={inx}></Card>
+                    );
                   })}
                 </div>
               </div>

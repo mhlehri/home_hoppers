@@ -2,10 +2,18 @@ import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import { useQuery } from "@tanstack/react-query";
 
-export const Add_new_modal = ({ refetch, text }) => {
+export const Edit_modal = ({ refetch, text, id }) => {
   const { user } = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
+  const { data } = useQuery({
+    queryKey: ["view_", id],
+    queryFn: async () => {
+      const res = await axios.get(`http://localhost:5000/singleHouse/${id}`);
+      return res.data;
+    },
+  });
   const formRef = useRef(null);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,9 +46,9 @@ export const Add_new_modal = ({ refetch, text }) => {
       email,
       owner_name,
     };
-    axios.post("http://localhost:5000/addHouse", houseInfo).then(() => {
+    axios.put(`http://localhost:5000/editHouse/${id}`, houseInfo).then(() => {
       setOpenModal(false);
-      toast.success("Successfully Inserted!", {
+      toast.success("Successfully Updated!", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -55,10 +63,10 @@ export const Add_new_modal = ({ refetch, text }) => {
     });
   };
   return (
-    <div>
+    <div className="inline-block">
       <button
         onClick={() => setOpenModal(true)}
-        className="bg-black text-white p-2 rounded-lg mb-4"
+        className="hover:bg-green-500/30 p-2 rounded-lg"
       >
         {text}
       </button>
@@ -98,9 +106,7 @@ export const Add_new_modal = ({ refetch, text }) => {
               ></path>
             </g>
           </svg>
-          <h1 className="backdrop-blur-sm text-2xl lg:text-4xl pb-4">
-            Add New
-          </h1>
+          <h1 className="backdrop-blur-sm text-2xl lg:text-4xl pb-4">Edit</h1>
           <div className="space-y-2">
             <div>
               <label htmlFor="name" className="block mb-2">
@@ -111,7 +117,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="name"
                 type="text"
                 name="name"
-                placeholder="John Doe"
+                defaultValue={data?.name}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -124,7 +130,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="address"
                 type="text"
                 name="address"
-                placeholder="Baipail, Savar"
+                defaultValue={data?.address}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -137,7 +143,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="city"
                 type="text"
                 name="city"
-                placeholder="Dhaka"
+                defaultValue={data?.city}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -150,7 +156,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="bed"
                 type="text"
                 name="bed"
-                placeholder="3 or more"
+                defaultValue={data?.bedrooms}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -163,7 +169,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="bath"
                 type="text"
                 name="bath"
-                placeholder="2 or more"
+                defaultValue={data?.bathrooms}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -176,7 +182,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="size"
                 type="text"
                 name="size"
-                placeholder="X or Y sqft"
+                defaultValue={data?.size}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -189,7 +195,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="img"
                 type="text"
                 name="img"
-                placeholder="provide img link"
+                defaultValue={data?.image}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -214,7 +220,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 id="rent"
                 type="text"
                 name="rent"
-                placeholder="$400"
+                defaultValue={data?.rent}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -225,9 +231,9 @@ export const Add_new_modal = ({ refetch, text }) => {
               <input
                 required
                 id="number"
-                type="number"
+                type="text"
                 name="number"
-                defaultValue={880}
+                defaultValue={data?.number}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>
@@ -239,7 +245,7 @@ export const Add_new_modal = ({ refetch, text }) => {
                 required
                 id="des"
                 name="des"
-                placeholder="All data to know renter....."
+                defaultValue={data?.des}
                 className="p-2 block w-full outline-none border rounded-md"
               />
             </div>

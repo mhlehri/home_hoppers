@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 
-export const Login_register_modal = () => {
+export const Login_register_modal = ({ text }) => {
   const [select_options, setSelect_options] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [register, setRegister] = useState(false);
@@ -176,7 +176,7 @@ export const Login_register_modal = () => {
 
   return (
     <div>
-      {user ? (
+      {text === "login" && user ? (
         <button
           onClick={() => {
             setIsChanged((er) => !er);
@@ -192,16 +192,28 @@ export const Login_register_modal = () => {
             });
             localStorage.removeItem("user");
           }}
-          className="border border-black hover:bg-black hover:text-white p-2 rounded-lg"
+          className={`border border-black hover:bg-black hover:text-white p-2 rounded-lg ${
+            text === "Book Now" && "hidden"
+          }`}
         >
           Logout
         </button>
       ) : (
         <button
           onClick={() => setOpenModal(true)}
-          className="border border-black hover:bg-black hover:text-white p-2 rounded-lg"
+          className={`border border-black hover:bg-black hover:text-white p-2 rounded-lg ${
+            text === "Book Now" && "hidden"
+          }`}
         >
           Login
+        </button>
+      )}
+      {text == "Book Now" && (
+        <button
+          onClick={() => setOpenModal(true)}
+          className="border border-black hover:bg-black hover:text-white p-2 rounded-lg"
+        >
+          Book Now
         </button>
       )}
       <div
@@ -300,7 +312,6 @@ export const Login_register_modal = () => {
                     id="number"
                     type="number"
                     defaultValue={880}
-                    placeholder="Owner or Renter"
                     className="p-3 block w-full outline-none border rounded-md"
                   />
                 </div>

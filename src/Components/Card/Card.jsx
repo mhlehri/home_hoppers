@@ -1,6 +1,11 @@
+import { useContext } from "react";
 import View_modal from "../View_modal/View_modal";
+import { AuthContext } from "../AuthProvider/AuthProvider";
+import { Login_register_modal } from "../Login_register_modal/Login_Register_Modal";
+import { Book_modal } from "../Book_modal/Book_modal";
 
-const Card = ({ data }) => {
+const Card = ({ data, refetch }) => {
+  const { user } = useContext(AuthContext);
   return (
     <div className="max-[350px] md:w-[350px] border px-6 py-4 mx-auto rounded-2xl space-y-6">
       {/* Card Image */}
@@ -19,12 +24,14 @@ const Card = ({ data }) => {
       </div>
       {/* Price and action button */}
       <div className="mt-5 flex justify-between items-center font-medium">
-        <button className="hover:text-white px-6 py-2 border border-black rounded-lg font-semibold md:text-base sm:text-sm text-[12px] hover:bg-black">
+        <button className="hover:text-white px-6 border border-black rounded-lg font-semibold md:text-base sm:text-sm text-[12px] hover:bg-black">
           <View_modal id={data?._id} text="View Details" />
         </button>
-        <button className="bg-black text-white px-6 py-2 rounded-lg font-semibold md:text-base sm:text-sm text-[12px] hover:bg-black/70">
-          Book Now
-        </button>
+        {user ? (
+          <Book_modal refetch={refetch} text="Book Now" id={data?._id} />
+        ) : (
+          <Login_register_modal text="Book Now" />
+        )}
       </div>
     </div>
   );

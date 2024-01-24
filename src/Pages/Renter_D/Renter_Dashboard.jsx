@@ -1,6 +1,6 @@
 import Table from "./Table/Table";
 
-const Owner_Dashboard = () => {
+const Renter_Dashboard = () => {
   return (
     <div className="mx-auto max-w-6xl">
       <Table />
@@ -8,4 +8,4 @@ const Owner_Dashboard = () => {
   );
 };
 
-export default Owner_Dashboard;
+export default Renter_Dashboard;

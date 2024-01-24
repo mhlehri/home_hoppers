@@ -1,9 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { Login_register_modal } from "../Login_register_modal/Login_Register_Modal";
+import { useContext } from "react";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
-const navItem = ["Home", "FAQ", "Support"];
+const navItem = ["Home", "Dashboard"];
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
   return (
     <nav className="shadow-black shadow-sm py-5">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -12,7 +15,15 @@ const Navbar = () => {
           {navItem.map((_, i) => (
             <li key={_}>
               <NavLink
-                to={`/${_ === "Home" ? "" : _}`}
+                to={`/${
+                  _ === "Home"
+                    ? ""
+                    : user?.role === "House Owner"
+                    ? "owner_dashboard"
+                    : user?.role === "House Renter"
+                    ? "renter_dashboard"
+                    : _
+                }`}
                 className={({ isActive, isPending }) =>
                   isPending
                     ? "pending"
@@ -27,7 +38,7 @@ const Navbar = () => {
           ))}
         </ul>
         <div>
-          <Login_register_modal></Login_register_modal>
+          <Login_register_modal text="login"></Login_register_modal>
         </div>
       </div>
     </nav>

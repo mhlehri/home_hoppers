@@ -18,6 +18,7 @@ const View_modal = ({ id, text }) => {
         onClick={() => {
           setOpenModal(true);
         }}
+        className="p-2 rounded-lg"
       >
         {text}
       </button>

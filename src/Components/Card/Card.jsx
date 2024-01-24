@@ -28,7 +28,7 @@ const Card = ({ data, refetch }) => {
           <View_modal id={data?._id} text="View Details" />
         </button>
         {user ? (
-          <Book_modal refetch={refetch} text="Book Now" id={data?._id} />
+          <Book_modal refetch={refetch} text="Book Now" data={data} />
         ) : (
           <Login_register_modal text="Book Now" />
         )}

@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 
-export const Book_modal = ({ refetch, text, id }) => {
+export const Book_modal = ({ refetch, text, data }) => {
   const { user } = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
   const formRef = useRef(null);
@@ -14,11 +14,12 @@ export const Book_modal = ({ refetch, text, id }) => {
     const number = form.number.value;
     const email = user?.email;
     const bookInfo = {
-      house_id: id,
-      name,
-      number,
-      email,
+      ...data,
+      R_name: name,
+      R_number: number,
+      R_email: email,
     };
+    console.log(bookInfo);
     axios.post("http://localhost:5000/addBook", bookInfo).then((res) => {
       setOpenModal(false);
       if (res.data.error) {
@@ -45,7 +46,7 @@ export const Book_modal = ({ refetch, text, id }) => {
         });
         refetch();
         formRef.current.reset();
-        axios.patch(`http://localhost:5000/updateStatus/${id}`);
+        axios.patch(`http://localhost:5000/updateStatus/${data?._id}`);
       }
     });
   };
@@ -130,7 +131,7 @@ export const Book_modal = ({ refetch, text, id }) => {
               </label>
               <input
                 id="number"
-                type="number"
+                type="text"
                 name="number"
                 defaultValue={user?.number}
                 className="p-2 block w-full outline-none border rounded-md"

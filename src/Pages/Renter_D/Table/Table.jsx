@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Delete_modal } from "../../../Components/Delete_modal/Delete_modal";
 import { useContext } from "react";
 import { AuthContext } from "../../../Components/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import View_modal from "../../../Components/View_modal/View_modal";
+import { Delete_B } from "./../../../Components/Delete_B/Delete_B";
 
 const Table = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +11,7 @@ const Table = () => {
     queryKey: ["myHouse", user?.email],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/myHouses/${user?.email}`
+        `http://localhost:5000/myBooks/${user?.email}`
       );
       return res.data;
     },
@@ -79,7 +79,7 @@ const Table = () => {
                       refetch={refetch}
                       id={_?._id}
                     />
-                    <Delete_modal refetch={refetch} id={_?._id} />
+                    <Delete_B refetch={refetch} id={_?._id} />
                   </td>
                 </tr>
               ))}

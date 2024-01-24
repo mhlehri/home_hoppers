@@ -1,8 +1,10 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
 export const Add_new_modal = ({ text }) => {
+  const { user } = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
   const formRef = useRef(null);
   const handleSubmit = (e) => {
@@ -19,8 +21,8 @@ export const Add_new_modal = ({ text }) => {
     const rent = form.rent.value;
     const number = form.number.value;
     const des = form.des.value;
-    const email = "fdfd";
-    const owner_name = "lehri";
+    const email = user?.email;
+    const owner_name = user?.name;
     const houseInfo = {
       name,
       address,

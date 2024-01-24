@@ -17,6 +17,11 @@ const options = [
   { value: "3", label: "3" },
   { value: "4", label: "4" },
 ];
+const options2 = [
+  { value: "", label: "Availability" },
+  { value: "available", label: "Available" },
+  { value: "Booked", label: "Booked" },
+];
 
 const All_houses = () => {
   const [options1, setOptions1] = useState();
@@ -30,12 +35,15 @@ const All_houses = () => {
       });
     });
   }, []);
-  console.log(options1);
   //   const { data: publishers } = useAllPublishers();
 
   const [selectedOption, setSelectedOption] = useState({
     value: "",
     label: "Bedrooms",
+  });
+  const [selectedOption2, setSelectedOption2] = useState({
+    value: "",
+    label: "Availability",
   });
   const [selectedOption1, setSelectedOption1] = useState({
     value: "",
@@ -45,12 +53,18 @@ const All_houses = () => {
   const [search, setSearch] = useState("");
   const getArticles = async (page) => {
     const res = await fetch(
-      `http://localhost:5000/allHouses?limit=10&page=${page}&tags=${selectedOption.value}&publisher=${selectedOption1.value}&search=${search}`
+      `http://localhost:5000/allHouses?limit=10&page=${page}&bedrooms=${selectedOption.value}&city=${selectedOption1.value}&available=${selectedOption2.value}&search=${search}`
     );
     return res.json();
   };
   const { isPending, data, hasNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["infinity", selectedOption, selectedOption1, search],
+    queryKey: [
+      "infinity",
+      selectedOption,
+      selectedOption1,
+      selectedOption2,
+      search,
+    ],
     queryFn: ({ pageParam = 1 }) => getArticles(pageParam),
     getNextPageParam: (lastPage, pages) => {
       return lastPage.length == 10 ? pages.length + 1 : undefined;
@@ -71,6 +85,10 @@ const All_houses = () => {
       value: "",
       label: "All City",
     });
+    setSelectedOption2({
+      value: "",
+      label: "Availability",
+    });
     setSearch(e.target.value);
   };
 
@@ -90,9 +108,14 @@ const All_houses = () => {
             <Select
               value={selectedOption1}
               required
-              placeholder="City"
               onChange={setSelectedOption1}
               options={options1}
+            />
+            <Select
+              value={selectedOption2}
+              required
+              onChange={setSelectedOption2}
+              options={options2}
             />
           </div>
           <br />
